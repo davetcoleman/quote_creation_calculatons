@@ -1,4 +1,4 @@
-// Author: Dave Coleman and ChatGPT ;-)
+// Author: Dave Coleman and ChatGPT ;-) 
 
 function runSOWSetup() {
   var ui = DocumentApp.getUi();
@@ -119,7 +119,7 @@ function runSOWSetup() {
 
     // Replace placeholders in file name
     var newName = originalName
-      .replace("COMPANY NAME", customer)
+      .replace("COMPANY_NAME", customer)
       .replace("SOW X", "SOW " + sowNumber);
 
     var copiedFile = originalFile.makeCopy(newName, sowFolder);
@@ -143,7 +143,7 @@ function runSOWSetup() {
       var body = doc.getBody();
 
       // Replace text in main body
-      body.replaceText('COMPANY NAME', customer);
+      body.replaceText('COMPANY_NAME', customer);
       body.replaceText('SOW X', 'SOW ' + sowNumber);
 
       // Add today's date
@@ -160,7 +160,7 @@ function runSOWSetup() {
   fileLinksHTML += '</ul>';
 
   // Final sidebar confirmation
-
+  
   var html = HtmlService.createHtmlOutput(titleHTML + summaryHTML + fileLinksHTML)
                         .setTitle("Confirmation")
                         .setWidth(300);
@@ -171,15 +171,15 @@ function runSOWSetup() {
 function totalUpTheEstimate() {
 
   var doc = DocumentApp.getActiveDocument();
-  var ui = DocumentApp.getUi();
+  var ui = DocumentApp.getUi(); 
   var sidebarTitle = "Proposal Estimate Summary";
-  ui.showSidebar(HtmlService.createHtmlOutput("<i>Calculating...</i><br/><br/>" +
+  ui.showSidebar(HtmlService.createHtmlOutput("<i>Calculating...</i><br/><br/>" + 
       "Checking every element in the document for EQUATION types and adding them up.")
       .setTitle(sidebarTitle).setWidth(300));
 
   // Get the body of the document
   var body = doc.getBody()
-
+  
   var quoteTotal = 0;
   var mathCheckHTML = '<br />Here are the raw estimate numbers detected:<br />';
 
@@ -191,9 +191,9 @@ function totalUpTheEstimate() {
   while (searchResult = body.findElement(searchType, searchResult)) {
     var element = searchResult.getElement();
 
-    // Get the text
+    // Get the text 
     var equation_text = element.getText();
-
+      
     // If found, add it to that list
     if (equation_text) {
 
@@ -201,28 +201,28 @@ function totalUpTheEstimate() {
       element.asText().setForegroundColor('#000000');
       element.asText().setBold(true);
       element.asText().setFontSize(16);
-
+      
       var estimate_value = parseFloat(equation_text);
       if (isNaN(estimate_value))
       {
-        ui.alert("Error","Unable to convert estimate field #" + j +
+        ui.alert("Error","Unable to convert estimate field #" + j + 
                           " of value '" + equation_text + "' to float. Estimate summary may be wrong",
                           ui.ButtonSet.OK);
-
+          
         mathCheckHTML = mathCheckHTML + "FAILED Equation Value " + j + ": " + equation_text + " day(s)<br />";
-
+        
         // Highlight element red
         element.asText().setBackgroundColor('#ff0000');
       } else {
         mathCheckHTML = mathCheckHTML + estimate_value + "<br />";
         quoteTotal += estimate_value;
-
+        
         // Highlight element green
         element.asText().setBackgroundColor('#02e89d');
       }
     }
   }
-
+  
   var hourlyRate = 235;
   var dollarEstimate = hourlyRate * 8 * quoteTotal;
   var formattedTotalEstimate = dollarEstimate.toLocaleString();
@@ -231,7 +231,7 @@ function totalUpTheEstimate() {
   var formattedWithContingency = totalWithContingency.toLocaleString();
 
   // Show math total in side bar
-  var titleHTML = '<h1>Total Proposal Cost</h1>' +
+  var titleHTML = '<h1>Total Proposal Cost</h1>' + 
                   '<i>Custom PickNik scripts</i> <br />';
   var fullHTML = titleHTML + mathCheckHTML +
                  "<br /><h3>Total Quote:</h3><h2>" + quoteTotal + " days of effort</h2>" +
@@ -267,11 +267,11 @@ function enableEquations(showThem)
   while (searchResult = body.findElement(searchType, searchResult)) {
     var element = searchResult.getElement();
 
-    // Get the text
+    // Get the text 
     var equation_text = element.getText();
 
     // If found
-    if (equation_text) {
+    if (equation_text) {    
       if (showThem) {
         // Highlight text yellow, set font black, make bold
         element.asText().setBackgroundColor('#ffff00');
@@ -295,7 +295,7 @@ function enableEquations(showThem)
  */
 function onOpen(e) {
   // Add custom menus to the spreadsheet.
-  var ui = DocumentApp.getUi();
+  var ui = DocumentApp.getUi(); 
 
   ui.createMenu('PickNik')
       //.addItem('Sum Equations to get Total Estimate', 'totalUpTheEstimate')
